@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Editar Tarea</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-top: 30px;
+        }
+
+        form {
+            width: 80%;
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            font-weight: bold;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        input[type="text"],
+        input[type="date"],
+        select {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: bold;
+            margin-top: 20px;
+            display: inline-block;
+            width: 100%;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        a {
+            display: inline-block;
+            text-align: center;
+            margin-top: 20px;
+            text-decoration: none;
+            color: #4CAF50;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <h1>Editar Tarea</h1>
+    <form method="POST">
+        <label>Descripción:</label>
+        <input type="text" name="descripcion" value="{{ tarea.descripcion }}" required><br><br>
+
+        <label>Fecha de Vencimiento:</label>
+        <input type="date" name="fecha_vencimiento" value="{{ tarea.fecha_vencimiento }}" required><br><br>
+
+        <label>Estado:</label>
+        <select name="estado" required>
+            <option value="Pendiente" {% if tarea.estado == 'Pendiente' %}selected{% endif %}>Pendiente</option>
+            <option value="Cerrada" {% if tarea.estado == 'Cerrada' %}selected{% endif %}>Cerrada</option>
+            <option value="Completada" {% if tarea.estado == 'Completada' %}selected{% endif %}>Completada</option>
+        </select><br><br>
+
+        <label>Producto:</label>
+        <select name="valor" required>
+            {% for producto in productos %}
+                <option value="{{ producto.id }}" {% if producto.id == tarea.producto_id %}selected{% endif %}>{{ producto.nombre }}</option>
+            {% endfor %}
+        </select><br><br>
+
+        <button type="submit">Guardar Cambios</button>
+    </form>
+    <br>
+    <a href="{{ url_for('tareas_cliente', cliente_id=tarea.cliente_id) }}">Volver</a>
+</body>
+</html>

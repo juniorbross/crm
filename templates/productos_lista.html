@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista de Productos</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-top: 30px;
+        }
+
+        .button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 8px 16px;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: bold;
+            margin: 5px;
+            display: inline-block;
+        }
+
+        .button:hover {
+            background-color: #45a049;
+        }
+
+        .producto-list {
+            width: 80%;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            border-bottom: 1px solid #ddd;
+            padding: 20px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        li:last-child {
+            border-bottom: none;
+        }
+
+        img {
+            border-radius: 8px;
+            width: 150px; /* Aumento el tamaño de la imagen */
+            height: 150px;
+            object-fit: cover;
+            margin-bottom: 15px;
+        }
+
+        .product-info {
+            margin-bottom: 15px;
+        }
+
+        form {
+            display: inline-block;
+            margin: 0;
+        }
+
+        .link-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Lista de Productos</h1>
+
+    <div class="producto-list">
+        <a href="{{ url_for('add_producto') }}" class="button">Agregar Producto</a>
+        <ul>
+            {% for producto in productos %}
+                <li>
+                    <img src="{{ producto.imagen_url }}" alt="{{ producto.nombre }}">
+                    <div class="product-info">
+                        <strong>{{ producto.nombre }}</strong> - ${{ producto.precio }}
+                    </div>
+                    <div>
+                        <a href="{{ url_for('editar_producto', producto_id=producto.id) }}" class="button">Editar</a>
+                    </div>
+                </li>
+            {% else %}
+                <li>No hay productos registrados.</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div class="link-container">
+        <a href="{{ url_for('index') }}" class="button">Volver al inicio</a>
+    </div>
+</body>
+</html>

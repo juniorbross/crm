@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Crear Producto</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-top: 30px;
+        }
+
+        form {
+            max-width: 500px;
+            background-color: #ffffff;
+            margin: 30px auto;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            box-sizing: border-box;
+            resize: vertical;
+        }
+
+        textarea {
+            min-height: 100px;
+        }
+
+        button {
+            margin-top: 20px;
+            width: 100%;
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .links {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .button {
+            display: inline-block;
+            background-color: #007BFF;
+            color: white;
+            padding: 10px 16px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            margin: 5px;
+        }
+
+        .button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Agregar Producto</h1>
+
+    <form method="POST" enctype="multipart/form-data">
+        <label for="nombre">Nombre</label>
+        <input type="text" name="nombre" required>
+
+        <label for="descripcion">Descripción</label>
+        <textarea name="descripcion" required></textarea>
+
+        <label for="precio">Precio</label>
+        <input type="number" name="precio" required>
+
+        <label for="imagen_url">URL de imagen</label>
+        <input type="text" name="imagen_url" required>
+
+        <button type="submit">Agregar Producto</button>
+    </form>
+
+    <div class="links">
+        <a href="{{ url_for('add_producto') }}" class="button">Volver a la lista de productos</a>
+        <a href="{{ url_for('index') }}" class="button">Volver al inicio</a>
+    </div>
+
+</body>
+</html>
