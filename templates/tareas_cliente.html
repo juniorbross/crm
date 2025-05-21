@@ -99,7 +99,9 @@
     <h1>Pendientes de {{ cliente.nombre }}</h1>
 
     <div class="tareas-container">
+        {% if session.get('rol') == 'admin' or session.get('rol') == 'servicio' %}
         <a href="{{ url_for('add_tarea', cliente_id=cliente.id) }}" class="button">Agregar Nueva Tarea</a>
+        {% endif %}
         <br><br>
 
         {% if tareas %}

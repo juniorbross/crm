@@ -88,7 +88,9 @@
     <h1>Lista de Productos</h1>
 
     <div class="producto-list">
+        {% if session.get('rol') == 'admin' or session.get('rol') == 'asesor' %}
         <a href="{{ url_for('add_producto') }}" class="button">Agregar Producto</a>
+        {% endif %}
         <ul>
             {% for producto in productos %}
                 <li>
@@ -97,7 +99,9 @@
                         <strong>{{ producto.nombre }}</strong> - ${{ producto.precio }}
                     </div>
                     <div>
+                        {% if session.get('rol') == 'admin' or session.get('rol') == 'asesor' %}
                         <a href="{{ url_for('editar_producto', producto_id=producto.id) }}" class="button">Editar</a>
+                        {% endif %}
                     </div>
                 </li>
             {% else %}
