@@ -18,6 +18,13 @@
             margin-top: 30px;
         }
 
+        .rol-info {
+            text-align: center;
+            color: #555;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+
         .cliente-list {
             width: 80%;
             max-width: 800px;
@@ -109,7 +116,6 @@
             font-weight: bold;
         }
 
-        /* NUEVO: Estilo para contenedor de botones horizontales */
         .botones-superiores {
             display: flex;
             justify-content: center;
@@ -118,23 +124,46 @@
             margin-top: 20px;
             margin-bottom: 20px;
         }
+
+        .logout-form {
+            display: inline;
+        }
+
+        .logout-button {
+            background-color: #dc3545;
+        }
     </style>
 </head>
 <body>
     <h1>CRM Automar Cali</h1>
 
-    <!-- Botones en fila horizontal -->
+    {% if session.get('rol') %}
+    <div class="rol-info">
+        Estás conectado como: {{ session.get('rol')|capitalize }}
+    </div>
+    {% endif %}
+
     <div class="botones-superiores">
+        {% if session.get('rol') == 'admin' or session.get('rol') == 'servicio' %}
         <a href="{{ url_for('add_cliente') }}" class="button">Agregar Cliente</a>
+        {% endif %}
+        {% if session.get('rol') == 'admin' or session.get('rol') == 'asesor' %}
         <a href="{{ url_for('add_producto') }}" class="button">Agregar Producto</a>
+        {% endif %}
         <a href="{{ url_for('lista_productos') }}" class="button">Ver Lista de Productos</a>
+        {% if session.get('rol') == 'admin'%}
         <a href="{{ url_for('total_ventas') }}" class="button">Ver Total de Ventas</a>
+        {% endif %}
+        <form action="{{ url_for('logout') }}" method="get" class="logout-form">
+            <button type="submit" class="button logout-button">Cerrar sesión</button>
+        </form>
     </div>
 
     <div class="cliente-list">
-        <!-- Formulario para enviar correos a clientes Fríos o Interesados -->
         <form action="{{ url_for('enviar_correos') }}" method="POST">
+            {% if session.get('rol') == 'admin' or session.get('rol') == 'asesor' %}
             <button type="submit" class="button">Ejecutar estrategia</button>
+            {% endif %}
         </form>
 
         <h1>Lista de Clientes</h1>
@@ -154,7 +183,6 @@
                             {% endif %}">{{ cliente.estado }}</span><br>
                     {% endif %}
 
-                    <!-- Mostrar productos asociados a través de las tareas -->
                     <div class="producto-info">
                         <span><strong>Productos Comprados:</strong></span><br>
                         {% if cliente.tareas %}
@@ -173,8 +201,12 @@
 
                     <a href="{{ url_for('editar_estado', cliente_id=cliente.id) }}" class="button">Editar Estado</a>
                     <a href="{{ url_for('tareas_cliente', cliente_id=cliente.id) }}" class="button">Historial</a>
+                    {% if session.get('rol') == 'admin' or session.get('rol') == 'servicio' %}
                     <a href="{{ url_for('editar_cliente', cliente_id=cliente.id) }}" class="button">Editar Cliente</a>
+                    {% endif %}
+                    {% if session.get('rol') == 'admin'%}
                     <a href="{{ url_for('eliminar_cliente', cliente_id=cliente.id) }}" class="button" style="background-color: red;">Eliminar Cliente</a>
+                    {% endif %}
                 </li>
             {% else %}
                 <li>No hay clientes registrados.</li>

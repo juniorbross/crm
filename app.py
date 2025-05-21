@@ -1,9 +1,10 @@
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, session, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
 import smtplib
 from email.message import EmailMessage
 import os
 from datetime import datetime
+from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
 
@@ -14,6 +15,47 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = 'mi_clave_secreta'
 
 db = SQLAlchemy(app)
+
+
+class Usuario(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(100), unique=True, nullable=False)
+    password_hash = db.Column(db.String(128), nullable=False)
+    rol = db.Column(db.String(20), nullable=False)  # admin, asistente, atencion
+
+    def set_password(self, password):
+        self.password_hash = generate_password_hash(password)
+
+    def check_password(self, password):
+        return check_password_hash(self.password_hash, password)
+    
+
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        email = request.form['email']
+        password = request.form['password']
+
+        usuario = Usuario.query.filter_by(email=email).first()
+
+        if usuario and usuario.check_password(password):
+            session['usuario_id'] = usuario.id
+            session['rol'] = usuario.rol
+            flash('Inicio de sesión exitoso', 'success')
+            return redirect(url_for('index'))
+
+        flash('Correo o contraseña incorrectos', 'danger')
+
+    return render_template('login.html')
+
+# cerrar sesion
+@app.route('/logout')
+def logout():
+    session.clear()
+    flash('Sesión cerrada', 'info')
+    return redirect(url_for('login'))
+
 
 # Modelo Cliente
 class Cliente(db.Model):
@@ -361,11 +403,14 @@ def enviar_producto_con_promociones(cliente_email, cliente_nombre, tarea):
     except Exception as e:
         print(f"Error al enviar correo con producto y promociones: {e}")
 
-
 @app.route('/')
 def index():
+    if 'usuario_id' not in session:
+        return redirect(url_for('login'))
+    
     clientes = Cliente.query.all()
     return render_template('index.html', clientes=clientes)
+
 
 @app.route('/enviar_correos', methods=['POST'])
 def enviar_correos():
@@ -569,4 +614,19 @@ def total_ventas():
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
+
+          # Crear usuarios quemados si no existen
+        usuarios = [
+            {'email': 'admin@crm.com', 'password': 'admin123', 'rol': 'admin'},
+            {'email': 'servicio@crm.com', 'password': 'servicio123', 'rol': 'servicio'},
+            {'email': 'asesor@crm.com', 'password': 'asesor123', 'rol': 'asesor'}
+        ]
+
+        for u in usuarios:
+            if not Usuario.query.filter_by(email=u['email']).first():
+                nuevo = Usuario(email=u['email'], rol=u['rol'])
+                nuevo.set_password(u['password'])
+                db.session.add(nuevo)
+
+        db.session.commit()
     app.run(debug=True)
