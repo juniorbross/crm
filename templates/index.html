@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRM - Lista de Clientes</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-top: 30px;
+        }
+
+        .cliente-list {
+            width: 80%;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            border-bottom: 1px solid #ddd;
+            padding: 15px 0;
+        }
+
+        li:last-child {
+            border-bottom: none;
+        }
+
+        .estado-nuevo {
+            color: green;
+            font-weight: bold;
+        }
+
+        .estado-seguimiento {
+            color: orange;
+            font-weight: bold;
+        }
+
+        .estado-interesado {
+            color: red;
+            font-weight: bold;
+        }
+
+        .estado-venta {
+            color: purple;
+            font-weight: bold;
+        }
+
+        .estado-frio {
+            color: blue;
+            font-weight: bold;
+        }
+
+        .button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 8px 16px;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: bold;
+            margin: 5px;
+            display: inline-block;
+        }
+
+        .button:hover {
+            background-color: #45a049;
+        }
+
+        .link-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        form {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .producto-info {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .producto-info img {
+            width: 50px;
+            height: 50px;
+            border-radius: 8px;
+            margin-right: 10px;
+        }
+
+        .producto-info span {
+            font-weight: bold;
+        }
+
+        /* NUEVO: Estilo para contenedor de botones horizontales */
+        .botones-superiores {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>CRM Automar Cali</h1>
+
+    <!-- Botones en fila horizontal -->
+    <div class="botones-superiores">
+        <a href="{{ url_for('add_cliente') }}" class="button">Agregar Cliente</a>
+        <a href="{{ url_for('add_producto') }}" class="button">Agregar Producto</a>
+        <a href="{{ url_for('lista_productos') }}" class="button">Ver Lista de Productos</a>
+        <a href="{{ url_for('total_ventas') }}" class="button">Ver Total de Ventas</a>
+    </div>
+
+    <div class="cliente-list">
+        <!-- Formulario para enviar correos a clientes Fríos o Interesados -->
+        <form action="{{ url_for('enviar_correos') }}" method="POST">
+            <button type="submit" class="button">Ejecutar estrategia</button>
+        </form>
+
+        <h1>Lista de Clientes</h1>
+        <ul>
+            {% for cliente in clientes %}
+                <li>
+                    <strong>{{ cliente.nombre }}</strong> - {{ cliente.email }}<br>
+
+                    {% if cliente.estado %}
+                        <span>Estado: </span>
+                        <span class=" 
+                            {% if cliente.estado == 'Nuevo' %}estado-nuevo
+                            {% elif cliente.estado == 'Seguimiento' %}estado-seguimiento
+                            {% elif cliente.estado == 'Interesado' %}estado-interesado
+                            {% elif cliente.estado == 'Venta' %}estado-venta
+                            {% elif cliente.estado == 'Frío' %}estado-frio
+                            {% endif %}">{{ cliente.estado }}</span><br>
+                    {% endif %}
+
+                    <!-- Mostrar productos asociados a través de las tareas -->
+                    <div class="producto-info">
+                        <span><strong>Productos Comprados:</strong></span><br>
+                        {% if cliente.tareas %}
+                            {% for tarea in cliente.tareas %}
+                                {% if tarea.estado == 'Completada' and tarea.producto %}
+                                    <div>
+                                        <img src="{{ tarea.producto.imagen_url }}" alt="{{ tarea.producto.nombre }}">
+                                        <span>{{ tarea.producto.nombre }} - ${{ tarea.producto.precio }}</span>
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        {% else %}
+                            <span>No hay productos asociados.</span><br>
+                        {% endif %}
+                    </div>
+
+                    <a href="{{ url_for('editar_estado', cliente_id=cliente.id) }}" class="button">Editar Estado</a>
+                    <a href="{{ url_for('tareas_cliente', cliente_id=cliente.id) }}" class="button">Historial</a>
+                    <a href="{{ url_for('editar_cliente', cliente_id=cliente.id) }}" class="button">Editar Cliente</a>
+                    <a href="{{ url_for('eliminar_cliente', cliente_id=cliente.id) }}" class="button" style="background-color: red;">Eliminar Cliente</a>
+                </li>
+            {% else %}
+                <li>No hay clientes registrados.</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div class="link-container">
+        <a href="{{ url_for('index') }}" class="button">Volver al inicio</a>
+    </div>
+</body>
+</html>

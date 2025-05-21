@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Estado</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            color: white;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        form {
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            width: 90%;
+            max-width: 400px;
+        }
+
+        label, select, button {
+            width: 100%;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+
+        select, button {
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+        }
+
+        select {
+            background-color: white;
+            color: black;
+        }
+
+        button {
+            background-color: #ff6b6b;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #ff4757;
+        }
+
+        .links {
+            margin-top: 20px;
+        }
+
+        .links a {
+            color: #ffd700;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .links a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <h1>Editar Estado de {{ cliente.nombre }}</h1>
+
+    <form method="POST">
+        <label for="estado">Nuevo Estado:</label>
+        <select name="estado" id="estado" required>
+            <option value="Nuevo" {% if cliente.estado == 'Nuevo' %}selected{% endif %}>Nuevo</option>
+            <option value="Seguimiento" {% if cliente.estado == 'Seguimiento' %}selected{% endif %}>Seguimiento</option>
+            <option value="Interesado" {% if cliente.estado == 'Interesado' %}selected{% endif %}>Interesado</option>
+            <option value="Venta" {% if cliente.estado == 'Venta' %}selected{% endif %}>Venta</option>
+            <option value="Frío" {% if cliente.estado == 'Frío' %}selected{% endif %}>Frío</option>
+            <option value="No Molestar" {% if cliente.estado == 'No Molestar' %}selected{% endif %}>No Molestar</option>
+        </select>
+
+        <button type="submit">Guardar Estado</button>
+    </form>
+
+    <div class="links">
+        <a href="{{ url_for('index') }}">Volver al inicio</a>
+    </div>
+</body>
+</html>

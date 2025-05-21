@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agregar Cliente</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(to right, #ff7e5f, #feb47b);
+            color: #fff;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        h1 {
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 36px;
+            color: #fff;
+        }
+        form {
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            width: 90%;
+            max-width: 500px;
+        }
+        label {
+            display: block;
+            margin-top: 15px;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input, select, button {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+        input, select {
+            background-color: #ffffff;
+            color: #333;
+        }
+        button {
+            background-color: #ff6b6b;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            padding: 15px;
+        }
+        button:hover {
+            background-color: #ff4757;
+        }
+        .links {
+            margin-top: 20px;
+        }
+        .links a {
+            color: #ffd700;
+            text-decoration: none;
+            margin: 0 10px;
+            font-weight: bold;
+        }
+        .links a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <h1>Agregar Nuevo Cliente</h1>
+
+    <form method="POST">
+        <label for="nombre">Nombre:</label>
+        <input type="text" name="nombre" required>
+
+        <label for="email">Email:</label>
+        <input type="email" name="email" required>
+
+        <label for="tipo_identificacion">Tipo de Identificación:</label>
+        <select name="tipo_identificacion" required>
+            <option value="">Seleccione...</option>
+            <option value="CC">Cédula de Ciudadanía</option>
+            <option value="NIT">Número de Identificación Tributaria (NIT)</option>
+            <option value="TI">Tarjeta de Identidad</option>
+            <option value="CE">Cédula de Extranjería</option>
+            <option value="PAS">Pasaporte</option>
+            <option value="OTRO">Otro</option>
+        </select>
+
+        <label for="numero_identificacion">Número Identificación:</label>
+        <input type="text" name="numero_identificacion" required>
+
+        <label for="celular">Celular:</label>
+        <input type="text" name="celular" required>
+
+        <button type="submit">Guardar</button>
+    </form>
+
+    <div class="links">
+        <a href="{{ url_for('index') }}">Volver</a>
+    </div>
+</body>
+</html>

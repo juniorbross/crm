@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Tareas del Cliente</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-top: 30px;
+        }
+
+        .tareas-container {
+            width: 80%;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        a.button, button.button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 8px 16px;
+            text-decoration: none;
+            border: none;
+            border-radius: 4px;
+            font-weight: bold;
+            margin: 5px;
+            display: inline-block;
+            cursor: pointer;
+        }
+
+        a.button:hover, button.button:hover {
+            background-color: #45a049;
+        }
+
+        .tarea {
+            padding: 15px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            transition: background-color 0.3s ease;
+        }
+
+        .pendiente {
+            background-color: yellow;
+        }
+
+        .cerrado {
+            background-color: green;
+            color: white;
+        }
+
+        .tarea:hover {
+            background-color: #f0f0f0;
+        }
+
+        .tarea p {
+            margin: 5px 0;
+        }
+
+        .producto-info {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #333;
+            display: flex;
+            align-items: center;
+        }
+
+        .producto-info img {
+            width: 50px;
+            height: 50px;
+            border-radius: 8px;
+            margin-right: 10px;
+        }
+
+        .producto-info span {
+            font-weight: bold;
+        }
+
+        .link-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Pendientes de {{ cliente.nombre }}</h1>
+
+    <div class="tareas-container">
+        <a href="{{ url_for('add_tarea', cliente_id=cliente.id) }}" class="button">Agregar Nueva Tarea</a>
+        <br><br>
+
+        {% if tareas %}
+            {% for tarea in tareas %}
+                <div class="tarea {% if tarea.estado == 'Pendiente' %}pendiente{% elif tarea.estado == 'Cerrada' %}cerrado{% endif %}">
+                    <p><strong>Descripción:</strong> {{ tarea.descripcion }}</p>
+                    <p><strong>Fecha de Vencimiento:</strong> {{ tarea.fecha_vencimiento }}</p>
+                    <p><strong>Estado:</strong> {{ tarea.estado }}</p>
+                    <p><strong>Producto:</strong> {{ tarea.producto.nombre }}</p>
+
+                    <!-- Mostrar información del producto -->
+                    <div class="producto-info">
+                        {% if tarea.producto.imagen_url %}
+                            <img src="{{ tarea.producto.imagen_url }}" alt="{{ tarea.producto.nombre }}">
+                        {% endif %}
+                        <span>{{ tarea.producto.nombre }} - ${{ tarea.producto.precio }}</span>
+                    </div>
+
+                    <a href="{{ url_for('editar_tarea', tarea_id=tarea.id) }}" class="button">Editar Tarea</a>
+
+                    <form action="{{ url_for('eliminar_tarea', tarea_id=tarea.id) }}" method="POST" style="display:inline;" onsubmit="return confirm('¿Estás seguro de que deseas eliminar esta tarea?');">
+                        <button type="submit" class="button" style="background-color: #e74c3c;">Eliminar Tarea</button>
+                    </form>
+                </div>
+                <hr>
+            {% endfor %}
+        {% else %}
+            <p>No hay tareas para este cliente.</p>
+        {% endif %}
+    </div>
+
+    <div class="link-container">
+        <a href="{{ url_for('index') }}" class="button">Volver al Inicio</a>
+    </div>
+
+</body>
+</html>

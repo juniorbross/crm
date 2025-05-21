@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Eliminar Producto</title>
+</head>
+<body>
+    <h1>¿Estás seguro de que deseas eliminar este producto?</h1>
+
+    <form method="POST">
+        <!-- Campo oculto para el producto_id -->
+        <input type="hidden" name="producto_id" value="{{ producto.id }}">
+        <button type="submit">Eliminar Producto</button>
+    </form>
+
+    <div>
+        <!-- Enlace para cancelar la eliminación -->
+        <a href="{{ url_for('lista_productos') }}" class="button">Cancelar</a>
+    </div>
+</body>
+</html>
